@@ -10,6 +10,8 @@ namespace BubbleShooter
 		private float height;
 		private int numBubblesEachRow;
 		private float percentageOfGameHeight = 0.8f;
+		// Keep this constant for efficiency.
+		private const float sqrt3 = 1.73205f;
 
 		private float bubbleRadius;
 		// Maximal number of bubbles vertically.
@@ -40,7 +42,7 @@ namespace BubbleShooter
 			if ((gameHeight - 2 * this.bubbleRadius) < 0) {
 				this.numColumns = 0;
 			} else {
-				this.numColumns = 1 + Convert.ToInt32 ((gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * Math.Sqrt (3)));
+				this.numColumns = 1 + Convert.ToInt32 ((gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * sqrt3));
 			}
 			// Initialize the bubble map.
 			bubbleMap = new Bubble[this.numBubblesEachRow, this.numColumns];
@@ -76,7 +78,7 @@ namespace BubbleShooter
 			} else {
 				position.SetX ((-0.5f * this.width) + this.bubbleRadius * (yIndex * 2));
 			}
-			position.SetY ((0.5f * this.height) - (this.bubbleRadius * (1 + Mathf.Sqrt (3) * (xIndex - 1))));
+			position.SetY ((0.5f * this.height) - (this.bubbleRadius * (1 + sqrt3 * (xIndex - 1))));
 			return position;
 		}
 

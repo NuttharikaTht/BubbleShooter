@@ -5,7 +5,6 @@ namespace BubbleShooter
 {
 	public class Bubble : MonoBehaviour
 	{
-
 		// Use this for initialization
 		void Start ()
 		{

@@ -24,6 +24,7 @@ namespace BubbleShooter
 		{
 		}
 
+		// Destroy the bubbles.
 		public void destroyBubbles (IEnumerable bubbles)
 		{
 			foreach (Bubble bubble in bubbles) {

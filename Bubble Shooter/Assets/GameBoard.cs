@@ -15,6 +15,9 @@ namespace BubbleShooter
 		// Maximal number of bubbles vertically.
 		private int numColumns;
 
+		// The two-dementional array to store the info of bubble map.
+		private Bubble[,] bubbleMap;
+
 		public GameBoard (float width, float height, int numBubblesEachRow, float percentageOfGameHeight) {
 			this.percentageOfGameHeight = percentageOfGameHeight;
 			GameBoard (width, height, numBubblesEachRow);
@@ -31,78 +34,68 @@ namespace BubbleShooter
 			if ((gameHeight - 2 * this.bubbleRadius) < 0) {
 				this.numColumns = 0;
 			} else {
-				this.numColumns = 1 + (gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * Math.Sqrt(3));
+				this.numColumns = 1 + Convert.ToInt32((gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * Math.Sqrt(3)));
 			}
+			// Initialize the bubble map.
+			bubbleMap = new Bubble[this.numBubblesEachRow, this.numColumns];
+		}
+
+		// Checks whether the indexes exists in game's map.
+		private bool IndexCheck (int xIndex, int yIndex) {
+			if (yIndex > this.numColumns)
+				return false;
+			
+			Position position = new Position();
+			if (yIndex % 2 == 1) {
+				if (xIndex > this.numBubblesEachRow)
+					return false;
+			} else {
+				if (xIndex > (this.numBubblesEachRow - 1))
+					return false;
+			}
+			return true;
 		}
 
 		// Attention: The index starts from 1.
-		public Position getPosition (int xIndex, int yIndex) {
-			if (yIndex > this.numColumns)
+		public Position CalculateBubblePosition (int xIndex, int yIndex) {
+			if (!IndexCheck(xIndex,yIndex))
 				return null;
 
 			Position position = new Position();
 			if (yIndex % 2 == 1) {
-				if (xIndex > this.numBubblesEachRow)
-					return null;
-				position.setX ((-0.5 * this.width) + this.bubbleRadius * (yIndex * 2 - 1));
+				position.SetX ((-0.5 * this.width) + this.bubbleRadius * (yIndex * 2 - 1));
 
 			} else {
-				if (xIndex > (this.numBubblesEachRow - 1))
-					return null;
-				position.setX ((-0.5 * this.width) + this.bubbleRadius * (yIndex * 2));
+				position.SetX ((-0.5 * this.width) + this.bubbleRadius * (yIndex * 2));
 			}
-			position.setY ((0.5 * this.height) - (this.bubbleRadius * (1 + Math.Sqrt(3) * (xIndex - 1))));
+			position.SetY ((0.5 * this.height) - (this.bubbleRadius * (1 + Math.Sqrt(3) * (xIndex - 1))));
 			return position;
 		}
 
-
+		private bool StoreBubbleToMap (Bubble bubble) {
+			bubbleMap [bubble.GetXIndex(), bubble.GetYIndex()] = bubble;
+		}
 
 //		// Snap the bubble to the game board.
-//		public void snapBubble (Bubble bubble)
+//		public void SnapBubble (Bubble bubble)
 //		{
 //		}
 //
 //		// Destroy the bubbles.
-//		public void destroyBubbles (IEnumerable bubbles)
+//		public void DestroyBubbles (IEnumerable bubbles)
 //		{
 //			foreach (Bubble bubble in bubbles) {
 //				bubble.Destroy ();
 //			}
 //		}
 //
-//		public void makeBubblesFall (IEnumerable bubbles)
+//		public void MakeBubblesFall (IEnumerable bubbles)
 //		{
 //			foreach (Bubble bubble in bubbles) {
 //				bubble.Fall ();
 //			}
 //		}
 
-	}
-
-	public class Position {
-		private float x;
-		private float y;
-
-		public Position (float x, float y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public void setX (float x) {
-			this.x = x;
-		}
-
-		public void setY (float y) {
-			this.y = y;
-		}
-
-		public float getX () {
-			return this.x;
-		}
-
-		public float getY () {
-			return this.y;
-		}
 	}
 }
 

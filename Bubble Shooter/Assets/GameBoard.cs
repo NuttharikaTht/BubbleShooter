@@ -19,6 +19,7 @@ namespace BubbleShooter
 			this.bubbleRadius = 0.5f * width / numBubblesEachRow;
 		}
 
+		// Snap the bubble to the game board.
 		public void snapBubble (Bubble bubble)
 		{
 		}

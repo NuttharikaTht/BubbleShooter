@@ -23,7 +23,7 @@ public class BubbleLauncher : MonoBehaviour
 	}
 
 	// Launch the bubble.
-	public void LaunchBubble (Vector3 direction)
+	public void LaunchBubble (Vector2 direction)
 	{
 		Debug.LogFormat ("A new bubble is launched towards direction: {0}.", direction.normalized);
 	}

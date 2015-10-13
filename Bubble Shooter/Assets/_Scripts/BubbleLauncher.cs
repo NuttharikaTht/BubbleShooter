@@ -5,6 +5,8 @@ namespace BubbleShooter
 {
 	public class BubbleLauncher : MonoBehaviour
 	{
+		public GameObject bubblePrefab;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -20,6 +22,8 @@ namespace BubbleShooter
 		// Prepare a bubble at the starting point.
 		public void LoadBubble ()
 		{
+			GameObject newBubble = Instantiate (bubblePrefab, transform.position, Quaternion.identity) as GameObject;
+
 			Debug.Log ("A new bubble is loaded.");
 		}
 

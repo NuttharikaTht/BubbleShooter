@@ -87,25 +87,25 @@ namespace BubbleShooter
 			bubbleMap [bubble.GetXIndex (), bubble.GetYIndex ()] = bubble;
 		}
 
-//		// Snap the bubble to the game board.
-//		public void SnapBubble (Bubble bubble)
-//		{
-//		}
-//
-//		// Destroy the bubbles.
-//		public void DestroyBubbles (IEnumerable bubbles)
-//		{
-//			foreach (Bubble bubble in bubbles) {
-//				bubble.Destroy ();
-//			}
-//		}
-//
-//		public void MakeBubblesFall (IEnumerable bubbles)
-//		{
-//			foreach (Bubble bubble in bubbles) {
-//				bubble.Fall ();
-//			}
-//		}
+		// Snap the bubble to the game board.
+		public void SnapBubble (Bubble bubble)
+		{
+		}
+
+		// Destroy the bubbles.
+		public void DestroyBubbles (IEnumerable bubbles)
+		{
+			foreach (Bubble bubble in bubbles) {
+				bubble.Destroy ();
+			}
+		}
+
+		public void MakeBubblesFall (IEnumerable bubbles)
+		{
+			foreach (Bubble bubble in bubbles) {
+				bubble.Fall ();
+			}
+		}
 
 	}
 }

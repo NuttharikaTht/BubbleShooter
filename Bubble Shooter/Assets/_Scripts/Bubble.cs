@@ -9,25 +9,36 @@ namespace BubbleShooter
 		private int yIndex;
 		private Position position;
 
-		public enum Color { Red, Blue, Yellow, Green, Purple };
+		public enum Color
+		{
+			Red,
+			Blue,
+			Yellow,
+			Green,
+			Purple }
+		;
 		private Color color;
 
-		public Bubble (int xIndex, int yIndex, Position position, Color color) {
+		public Bubble (int xIndex, int yIndex, Position position, Color color)
+		{
 			this.xIndex = xIndex;
 			this.yIndex = yIndex;
 			this.position = position;
 			this.color = color;
 		}
 
-		public int GetXIndex() {
+		public int GetXIndex ()
+		{
 			return xIndex;
 		}
 
-		public int GetYIndex() {
+		public int GetYIndex ()
+		{
 			return yIndex;
 		}
 
-		public Position GetPosition() {
+		public Position GetPosition ()
+		{
 			return position;
 		}
 

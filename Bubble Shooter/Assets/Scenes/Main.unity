@@ -1310,6 +1310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bubblePrefab: {fileID: 148712, guid: ec2a49e06cde24d85af07b3202612846, type: 2}
+  launchSpeed: 110
 --- !u!4 &2108746267
 Transform:
   m_ObjectHideFlags: 0

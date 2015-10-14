@@ -7,16 +7,9 @@ namespace BubbleShooter {
     private int yIndex;
     private Position position;
 
-    public enum Color {
-      Red,
-      Blue,
-      Yellow,
-      Green,
-      Purple
-    }
-    private Color color;
+    private BubbleColor color;
 
-    public Bubble (int xIndex, int yIndex, Position position, Color color) {
+    public Bubble (int xIndex, int yIndex, Position position, BubbleColor color) {
       this.xIndex = xIndex;
       this.yIndex = yIndex;
       this.position = position;

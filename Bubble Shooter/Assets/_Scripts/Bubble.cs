@@ -12,8 +12,8 @@ namespace BubbleShooter {
       Blue,
       Yellow,
       Green,
-      Purple }
-    ;
+      Purple
+    }
     private Color color;
 
     public Bubble (int xIndex, int yIndex, Position position, Color color) {

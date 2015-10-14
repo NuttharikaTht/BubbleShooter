@@ -7,6 +7,7 @@ namespace BubbleShooter {
     public float launchSpeed;
 
     private GameObject loadedBubble;
+    private Pallette pallette = new Pallette ();
 
     // Use this for initialization
     void Start () {
@@ -21,8 +22,8 @@ namespace BubbleShooter {
     // Prepare a bubble at the starting point.
     public void LoadBubble () {
       loadedBubble = Instantiate (bubblePrefab, transform.position, Quaternion.identity) as GameObject;
-
-      Debug.Log ("A new bubble is loaded.");
+      SpriteRenderer renderer = loadedBubble.GetComponent<SpriteRenderer> ();
+      renderer.color = pallette.GetRandomColor ();
     }
 
     // Launch the bubble.
@@ -34,6 +35,8 @@ namespace BubbleShooter {
       Rigidbody2D rb = loadedBubble.GetComponent<Rigidbody2D> ();
       rb.velocity = launchSpeed * direction.normalized;
 
+      // Currently load a new bubble immediately after launching.
+      // This will help in testing.
       LoadBubble ();
 
       Debug.LogFormat ("A new bubble is launched towards direction: {0}.", direction.normalized);

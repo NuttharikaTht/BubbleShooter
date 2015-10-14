@@ -29,11 +29,11 @@ namespace BubbleShooter {
       colorTable = new Color[numBubbleColors];
 
       // Initialize colors here.
-      colorTable [(int)BubbleColor.Red] = new Color (255, 107, 107);
-      colorTable [(int)BubbleColor.Green] = new Color (113, 248, 142);
-      colorTable [(int)BubbleColor.Blue] = new Color (167, 150, 255);
-      colorTable [(int)BubbleColor.Yellow] = new Color (255, 251, 111);
-      colorTable [(int)BubbleColor.Purple] = new Color (248, 120, 255);
+      colorTable [(int)BubbleColor.Red] = new Color32 (255, 107, 107, 255);
+      colorTable [(int)BubbleColor.Green] = new Color32 (113, 248, 142, 255);
+      colorTable [(int)BubbleColor.Blue] = new Color32 (167, 150, 255, 255);
+      colorTable [(int)BubbleColor.Yellow] = new Color32 (255, 251, 111, 255);
+      colorTable [(int)BubbleColor.Purple] = new Color32 (248, 120, 255, 255);
     }
 
     // Get color from BubbleColor enum type.

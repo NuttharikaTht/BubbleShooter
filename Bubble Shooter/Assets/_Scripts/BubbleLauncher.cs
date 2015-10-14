@@ -34,6 +34,8 @@ namespace BubbleShooter {
       Rigidbody2D rb = loadedBubble.GetComponent<Rigidbody2D> ();
       rb.velocity = launchSpeed * direction.normalized;
 
+      LoadBubble ();
+
       Debug.LogFormat ("A new bubble is launched towards direction: {0}.", direction.normalized);
     }
   }

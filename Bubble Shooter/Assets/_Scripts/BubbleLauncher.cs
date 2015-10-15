@@ -4,6 +4,7 @@ using System.Collections;
 namespace BubbleShooter {
   public class BubbleLauncher : MonoBehaviour {
     public GameObject bubblePrefab;
+    public GameBoard gameBoard;
     public float launchSpeed;
 
     private GameObject loadedBubble;
@@ -16,14 +17,18 @@ namespace BubbleShooter {
 	
     // Update is called once per frame
     void Update () {
-	
     }
 
     // Prepare a bubble at the starting point.
     public void LoadBubble () {
       loadedBubble = Instantiate (bubblePrefab, transform.position, Quaternion.identity) as GameObject;
+
       SpriteRenderer renderer = loadedBubble.GetComponent<SpriteRenderer> ();
       renderer.color = pallette.GetRandomColor ();
+
+      Bubble bubble = loadedBubble.GetComponent<Bubble> ();
+      bubble.GameBoard = gameBoard;
+      bubble.BubbleLauncher = this;
     }
 
     // Launch the bubble.
@@ -34,10 +39,6 @@ namespace BubbleShooter {
       // Set the velocity of the bubble.
       Rigidbody2D rb = loadedBubble.GetComponent<Rigidbody2D> ();
       rb.velocity = launchSpeed * direction.normalized;
-
-      // Currently load a new bubble immediately after launching.
-      // This will help in testing.
-      LoadBubble ();
 
       Debug.LogFormat ("A new bubble is launched towards direction: {0}.", direction.normalized);
     }

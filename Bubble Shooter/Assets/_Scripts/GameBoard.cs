@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 
 namespace BubbleShooter {
-  public class GameBoard {
+  public class GameBoard : MonoBehaviour {
     private float width;
     private float height;
     private int numBubblesEachRow;

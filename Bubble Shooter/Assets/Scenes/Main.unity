@@ -139,7 +139,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 661c405cd7e7c41e08b78f9f5e45d4ba, type: 3}
-  m_Color: {r: .632352948, g: .556419313, b: .460315764, a: 1}
+  m_Color: {r: .176470578, g: .176470578, b: .176470578, a: 1}
 --- !u!61 &91967064
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -261,7 +261,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 661c405cd7e7c41e08b78f9f5e45d4ba, type: 3}
-  m_Color: {r: .632352948, g: .556419313, b: .460315764, a: 1}
+  m_Color: {r: .176470578, g: .176470578, b: .176470578, a: 1}
 --- !u!61 &153752523
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -317,7 +317,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 661c405cd7e7c41e08b78f9f5e45d4ba, type: 3}
-  m_Color: {r: .632352948, g: .556419313, b: .460315764, a: 1}
+  m_Color: {r: .176470578, g: .176470578, b: .176470578, a: 1}
 --- !u!4 &249883152
 Transform:
   m_ObjectHideFlags: 0
@@ -622,7 +622,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 661c405cd7e7c41e08b78f9f5e45d4ba, type: 3}
-  m_Color: {r: .632352948, g: .556419313, b: .460315764, a: 1}
+  m_Color: {r: .176470578, g: .176470578, b: .176470578, a: 1}
 --- !u!61 &806140895
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -630,7 +630,7 @@ BoxCollider2D:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 806140892}
   m_Enabled: 1
-  m_Material: {fileID: 6200000, guid: 585601879ed7a45eb96d592f1dc680bb, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
@@ -898,7 +898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubblePrefab: {fileID: 148712, guid: ec2a49e06cde24d85af07b3202612846, type: 2}
   gameBoard: {fileID: 1478457433}
-  launchSpeed: 75
+  launchSpeed: 90
 --- !u!4 &2108746267
 Transform:
   m_ObjectHideFlags: 0

@@ -27,6 +27,7 @@ namespace BubbleShooter {
       renderer.color = pallette.GetRandomColor ();
 
       Bubble bubble = loadedBubble.GetComponent<Bubble> ();
+      bubble.State = BubbleState.Loaded;
       bubble.GameBoard = gameBoard;
       bubble.BubbleLauncher = this;
     }
@@ -39,6 +40,11 @@ namespace BubbleShooter {
       // Set the velocity of the bubble.
       Rigidbody2D rb = loadedBubble.GetComponent<Rigidbody2D> ();
       rb.velocity = launchSpeed * direction.normalized;
+
+      Bubble bubble = loadedBubble.GetComponent<Bubble> ();
+      bubble.State = BubbleState.Launched;
+
+      loadedBubble = null;
 
       Debug.LogFormat ("A new bubble is launched towards direction: {0}.", direction.normalized);
     }

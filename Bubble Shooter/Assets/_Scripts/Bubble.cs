@@ -2,14 +2,19 @@
 using System.Collections;
 
 namespace BubbleShooter {
+  public enum BubbleState {
+    Loaded = 0,
+    Launched,
+    Stopped,
+  }
   public class Bubble : MonoBehaviour {
     private int xIndex;
     private int yIndex;
     private Position position;
     private GameBoard gameBoard;
     private BubbleLauncher bubbleLauncher;
-
     private BubbleColor color;
+    private BubbleState state = BubbleState.Loaded;
 
     public Bubble (int xIndex, int yIndex, Position position, BubbleColor color) {
       this.xIndex = xIndex;
@@ -28,6 +33,15 @@ namespace BubbleShooter {
 
     public Position GetPosition () {
       return position;
+    }
+
+    public BubbleState State {
+      get {
+        return state;
+      }
+      set {
+        state = value;
+      }
     }
 
     public GameBoard GameBoard {
@@ -56,12 +70,15 @@ namespace BubbleShooter {
     void Update () {
     }
 
-    void OnTriggerEnter2D (Collider2D collider) {
-      GameObject gameObject = collider.gameObject;
+    void OnCollisionEnter2D (Collision2D collision) {
+      // If current bubble is not launched, do nothing.
+      if (this.State != BubbleState.Launched) {
+        return;
+      }
 
-      if (gameObject.tag == "LeftBorder" || gameObject.tag == "RightBorder") {
-        Bounce ();
-      } else if (gameObject.tag == "UpperBorder" || gameObject.tag == "Bubble") {
+      GameObject gameObject = collision.gameObject;
+
+      if (gameObject.tag == "UpperBorder" || gameObject.tag == "Bubble") {
         StopOnBoard ();
       }
     }
@@ -82,8 +99,11 @@ namespace BubbleShooter {
     public void StopOnBoard () {
       Rigidbody2D rb = GetComponent<Rigidbody2D> ();
       rb.velocity = Vector2.zero;
+      rb.isKinematic = true;
       // Snap this bubble to game board.
       this.GameBoard.SnapBubble (this);
+      // Set stopping flag.
+      this.State = BubbleState.Stopped;
       // Load a new bubble.
       this.BubbleLauncher.LoadBubble ();
     }

@@ -10,16 +10,14 @@ namespace BubbleShooter {
   public class Bubble : MonoBehaviour {
     private int xIndex;
     private int yIndex;
-    private Position position;
     private GameBoard gameBoard;
     private BubbleLauncher bubbleLauncher;
     private BubbleColor color;
     private BubbleState state = BubbleState.Loaded;
 
-    public Bubble (int xIndex, int yIndex, Position position, BubbleColor color) {
+    public Bubble (int xIndex, int yIndex, BubbleColor color) {
       this.xIndex = xIndex;
       this.yIndex = yIndex;
-      this.position = position;
       this.color = color;
     }
 
@@ -29,10 +27,6 @@ namespace BubbleShooter {
 
     public int GetYIndex () {
       return yIndex;
-    }
-
-    public Position GetPosition () {
-      return position;
     }
 
     public BubbleState State {
@@ -77,9 +71,10 @@ namespace BubbleShooter {
       }
 
       GameObject gameObject = collision.gameObject;
+      Bubble collidedBubble = collision.gameObject.GetComponent<Bubble> ();
 
       if (gameObject.tag == "UpperBorder" || gameObject.tag == "Bubble") {
-        StopOnBoard ();
+        StopOnBoard (collidedBubble);
       }
     }
 
@@ -96,12 +91,12 @@ namespace BubbleShooter {
     }
 
     // Stop on game board.
-    public void StopOnBoard () {
+    public void StopOnBoard (Bubble collidedBubble) {
       Rigidbody2D rb = GetComponent<Rigidbody2D> ();
       rb.velocity = Vector2.zero;
       rb.isKinematic = true;
       // Snap this bubble to game board.
-      this.GameBoard.SnapBubble (this);
+      this.GameBoard.SnapBubble (this, collidedBubble);
       // Set stopping flag.
       this.State = BubbleState.Stopped;
       // Load a new bubble.

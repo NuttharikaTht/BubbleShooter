@@ -47,7 +47,6 @@ namespace BubbleShooter {
       if (yIndex > this.numColumns)
         return false;
       
-      Position position = new Position ();
       if (yIndex % 2 == 1) {
         if (xIndex > this.numBubblesEachRow)
           return false;
@@ -59,27 +58,30 @@ namespace BubbleShooter {
     }
 
     // Attention: The index starts from 1.
-    public Position CalculateBubblePosition (int xIndex, int yIndex) {
-      if (!IndexCheck (xIndex, yIndex))
-        return null;
+    public Vector2 CalculateBubblePosition (int xIndex, int yIndex) {
+//      if (!IndexCheck (xIndex, yIndex))
+//        return null;
 
-      Position position = new Position ();
+	  Vector2 position = new Vector2 ();
       if (yIndex % 2 == 1) {
-        position.SetX ((-0.5f * this.width) + this.bubbleRadius * (yIndex * 2 - 1));
+	    position.x = (-0.5f * this.width) + this.bubbleRadius * (yIndex * 2 - 1);
 
       } else {
-        position.SetX ((-0.5f * this.width) + this.bubbleRadius * (yIndex * 2));
+		position.x = (-0.5f * this.width) + this.bubbleRadius * (yIndex * 2);
       }
-      position.SetY ((0.5f * this.height) - (this.bubbleRadius * (1 + sqrt3 * (xIndex - 1))));
+	  position.y = (0.5f * this.height) - (this.bubbleRadius * (1 + sqrt3 * (xIndex - 1)));
       return position;
     }
+
+//	public 
 
     private void StoreBubbleToMap (Bubble bubble) {
       bubbleMap [bubble.GetXIndex (), bubble.GetYIndex ()] = bubble;
     }
 
     // Snap the bubble to the game board.
-    public void SnapBubble (Bubble bubble) {
+    public void SnapBubble (Bubble newBubble, Bubble collidedBubble) {
+	  
     }
 
     // Destroy the bubbles.

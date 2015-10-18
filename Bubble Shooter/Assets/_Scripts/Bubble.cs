@@ -25,8 +25,16 @@ namespace BubbleShooter {
       return xIndex;
     }
 
+    public void SetXIndex (int x) {
+      xIndex = x;
+    }
+
     public int GetYIndex () {
       return yIndex;
+    }
+
+    public void SetYIndex (int y) {
+      yIndex = y;
     }
 
     public BubbleState State {
@@ -71,10 +79,10 @@ namespace BubbleShooter {
       }
 
       GameObject gameObject = collision.gameObject;
-      Bubble collidedBubble = collision.gameObject.GetComponent<Bubble> ();
-
-      if (gameObject.tag == "UpperBorder" || gameObject.tag == "Bubble") {
-        StopOnBoard (collidedBubble);
+      if (gameObject.tag == "UpperBorder") {
+        StopOnBoard (null);
+      } else if (gameObject.tag == "Bubble") {
+        StopOnBoard (collision.gameObject.GetComponent<Bubble> ());
       }
     }
 
@@ -91,7 +99,7 @@ namespace BubbleShooter {
     }
 
     // Stop on game board.
-    public void StopOnBoard (Bubble collidedBubble) {
+    private void StopOnBoard (Bubble collidedBubble) {
       Rigidbody2D rb = GetComponent<Rigidbody2D> ();
       rb.velocity = Vector2.zero;
       rb.isKinematic = true;

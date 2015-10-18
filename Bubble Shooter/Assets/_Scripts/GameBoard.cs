@@ -4,29 +4,26 @@ using System.Collections;
 
 namespace BubbleShooter {
   public class GameBoard : MonoBehaviour {
-    private float width;
-    private float height;
-    private int numBubblesEachRow;
-    private float percentageOfGameHeight = 0.8f;
+    public float width;
+    public float height;
+    public int numBubblesEachRow;
+    public float percentageOfGameHeight = 0.8f;
+
     // Keep this constant for efficiency.
     private const float sqrt3 = 1.73205f;
     private float bubbleRadius;
     // Maximal number of bubbles vertically.
-    private int numColumns;
+    private int numRows;
 
     // The two-dementional array to store the info of bubble map.
     private Bubble[,] bubbleMap;
+    private Vector2[,] bubbleMapPosition;
 
-    public GameBoard (float width, float height, int numBubblesEachRow, float percentageOfGameHeight) {
-      this.percentageOfGameHeight = percentageOfGameHeight;
-      SetUpGameBoard (width, height, numBubblesEachRow);
+    void Start () {
+      SetUpGameBoard (width, height, numBubblesEachRow, percentageOfGameHeight);
     }
 
-    public GameBoard (float width, float height, int numBubblesEachRow) {
-      SetUpGameBoard (width, height, numBubblesEachRow);
-    }
-
-    private void SetUpGameBoard (float width, float height, int numBubblesEachRow) {
+    private void SetUpGameBoard (float width, float height, int numBubblesEachRow, float percentageOfGameHeight) {
       this.width = width;
       this.height = height;
       this.numBubblesEachRow = numBubblesEachRow;
@@ -34,54 +31,119 @@ namespace BubbleShooter {
       
       float gameHeight = percentageOfGameHeight * height;
       if ((gameHeight - 2 * this.bubbleRadius) < 0) {
-        this.numColumns = 0;
+        this.numRows = 0;
       } else {
-        this.numColumns = 1 + Convert.ToInt32 ((gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * sqrt3));
+        this.numRows = 1 + Convert.ToInt32 ((gameHeight - 2 * this.bubbleRadius) / (this.bubbleRadius * sqrt3));
       }
       // Initialize the bubble map.
-      bubbleMap = new Bubble[this.numBubblesEachRow, this.numColumns];
+      bubbleMap = new Bubble[this.numRows + 1, this.numBubblesEachRow + 1];
+      bubbleMapPosition = new Vector2[this.numRows + 1, this.numBubblesEachRow + 1];
+      InitializeBubbleMapPosition ();
+    }
+
+    // Attention: The index starts from 1.
+    private Vector2 CalculateBubblePosition (int xIndex, int yIndex) {
+//      if (!IndexCheck (xIndex, yIndex))
+//        return null;
+
+      Vector2 position = new Vector2 ();
+      if (xIndex % 2 == 1) {
+        position.x = (-0.5f * width) + bubbleRadius * (yIndex * 2 - 1);
+
+      } else {
+        position.x = (-0.5f * width) + bubbleRadius * (yIndex * 2);
+      }
+      position.y = (0.5f * height) - (bubbleRadius * (1 + sqrt3 * (xIndex - 1)));
+      Debug.Log (xIndex + " " + yIndex + " " + position.x + " " + position.y);
+      return position;
+    }
+
+    private void InitializeBubbleMapPosition () {
+      for (int i = 1; i <= numRows; i++) {
+        for (int j = 1; j <= numBubblesEachRow; j++) {
+          if (i % 2 == 0 && j == numBubblesEachRow) {
+            continue;
+          }
+          bubbleMapPosition [i, j] = CalculateBubblePosition (i, j);
+        }
+      }
     }
 
     // Checks whether the indexes exists in game's map.
     private bool IndexCheck (int xIndex, int yIndex) {
-      if (yIndex > this.numColumns)
+      if (xIndex < 1 || yIndex < 1 || xIndex > numRows)
         return false;
       
-      if (yIndex % 2 == 1) {
-        if (xIndex > this.numBubblesEachRow)
+      if (xIndex % 2 == 1) {
+        if (yIndex > numBubblesEachRow)
           return false;
       } else {
-        if (xIndex > (this.numBubblesEachRow - 1))
+        if (yIndex > (numBubblesEachRow - 1))
           return false;
       }
       return true;
     }
 
-    // Attention: The index starts from 1.
-    public Vector2 CalculateBubblePosition (int xIndex, int yIndex) {
-//      if (!IndexCheck (xIndex, yIndex))
-//        return null;
-
-	  Vector2 position = new Vector2 ();
-      if (yIndex % 2 == 1) {
-	    position.x = (-0.5f * this.width) + this.bubbleRadius * (yIndex * 2 - 1);
-
-      } else {
-		position.x = (-0.5f * this.width) + this.bubbleRadius * (yIndex * 2);
-      }
-	  position.y = (0.5f * this.height) - (this.bubbleRadius * (1 + sqrt3 * (xIndex - 1)));
-      return position;
-    }
-
-//	public 
-
-    private void StoreBubbleToMap (Bubble bubble) {
-      bubbleMap [bubble.GetXIndex (), bubble.GetYIndex ()] = bubble;
+    private void StoreBubbleToMap (Bubble bubble, int xIndex, int yIndex) {
+      bubble.SetXIndex (xIndex);
+      bubble.SetYIndex (yIndex);
+      bubbleMap [xIndex, yIndex] = bubble;
     }
 
     // Snap the bubble to the game board.
     public void SnapBubble (Bubble newBubble, Bubble collidedBubble) {
-	  
+      int snappedXIndex = 1;
+      int snappedYIndex = 1;
+      if (collidedBubble == null) {
+        // Collision object is UpperBorder.
+        float minDistance = 2 * bubbleRadius;
+        for (int i = 1; i <= numBubblesEachRow; i++) {
+          float distance = Vector2.Distance (newBubble.transform.position, bubbleMapPosition [1, i]);
+          if (distance < minDistance) {
+            minDistance = distance;
+            snappedYIndex = i;
+          }
+        }
+      } else {
+        // Collision object is an existing bubble.
+        int collidedX = collidedBubble.GetXIndex ();
+        int collidedY = collidedBubble.GetYIndex ();
+        IndexPair[] nearbyIndex = new IndexPair[6]; // left, right, leftup, leftbottom, rightup, rightbottom
+        nearbyIndex [0] = new IndexPair (collidedX, collidedY - 1); // left
+        nearbyIndex [1] = new IndexPair (collidedX, collidedY + 1); // right
+        if (collidedX % 2 == 0) {
+          nearbyIndex [2] = new IndexPair (collidedX - 1, collidedY); // leftup
+          nearbyIndex [3] = new IndexPair (collidedX + 1, collidedY); // leftbottom
+          nearbyIndex [4] = new IndexPair (collidedX - 1, collidedY + 1); // rightup
+          nearbyIndex [5] = new IndexPair (collidedX + 1, collidedY + 1); // rightbottom
+        } else {
+          nearbyIndex [2] = new IndexPair (collidedX - 1, collidedY - 1); // leftup
+          nearbyIndex [3] = new IndexPair (collidedX + 1, collidedY - 1); // leftbottom
+          nearbyIndex [4] = new IndexPair (collidedX - 1, collidedY); // rightup
+          nearbyIndex [5] = new IndexPair (collidedX + 1, collidedY); // rightbottom
+        }
+        float minDistance = 2 * bubbleRadius;
+        snappedXIndex = collidedX;
+        snappedYIndex = collidedY;
+        for (int i = 0; i <= 5; i++) {
+          if (!IndexCheck (nearbyIndex [i].X, nearbyIndex [i].Y))
+            continue;
+          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] != null)
+            continue;
+          float distance = Vector2.Distance (newBubble.transform.position, bubbleMapPosition [nearbyIndex [i].X, nearbyIndex [i].Y]);
+          if (distance < minDistance) {
+            minDistance = distance;
+            snappedXIndex = nearbyIndex [i].X;
+            snappedYIndex = nearbyIndex [i].Y;
+          }
+        }
+        // This should never happen.
+        if (snappedXIndex == collidedX && snappedYIndex == collidedY)
+          return;
+      }
+      newBubble.transform.position = new Vector2 (bubbleMapPosition [snappedXIndex, snappedYIndex].x, bubbleMapPosition [snappedXIndex, snappedYIndex].y);
+      StoreBubbleToMap (newBubble, snappedXIndex, snappedYIndex);
+      Debug.Log (snappedXIndex + " " + snappedYIndex + " " + bubbleMapPosition [snappedXIndex, snappedYIndex].x + " " + bubbleMapPosition [snappedXIndex, snappedYIndex].y);
     }
 
     // Destroy the bubbles.

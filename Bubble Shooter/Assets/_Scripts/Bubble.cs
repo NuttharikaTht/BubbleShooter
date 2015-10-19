@@ -7,6 +7,7 @@ namespace BubbleShooter {
     Launched,
     Stopped,
   }
+
   public class Bubble : MonoBehaviour {
     private int xIndex;
     private int yIndex;
@@ -107,6 +108,10 @@ namespace BubbleShooter {
       this.GameBoard.SnapBubble (this, collidedBubble);
       // Set stopping flag.
       this.State = BubbleState.Stopped;
+
+      Animation animation = this.GetComponent<Animation> ();
+      animation.Play ("Bubble Blast");
+
       // Load a new bubble.
       this.BubbleLauncher.LoadBubble ();
     }

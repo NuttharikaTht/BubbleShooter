@@ -22,20 +22,31 @@ namespace BubbleShooter {
       this.color = color;
     }
 
-    public int GetXIndex () {
-      return xIndex;
+    public int XIndex {
+      get {
+        return xIndex;
+      }
+      set {
+        xIndex = value;
+      }
     }
 
-    public void SetXIndex (int x) {
-      xIndex = x;
+    public int YIndex {
+      get {
+        return yIndex;
+      }
+      set {
+        yIndex = value;
+      }
     }
 
-    public int GetYIndex () {
-      return yIndex;
-    }
-
-    public void SetYIndex (int y) {
-      yIndex = y;
+    public BubbleColor Color {
+      get {
+        return color;
+      }
+      set {
+        color = value;
+      }
     }
 
     public BubbleState State {

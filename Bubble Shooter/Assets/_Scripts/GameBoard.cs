@@ -54,7 +54,6 @@ namespace BubbleShooter {
         position.x = (-0.5f * width) + bubbleRadius * (yIndex * 2);
       }
       position.y = (0.5f * height) - (bubbleRadius * (1 + sqrt3 * (xIndex - 1)));
-      Debug.Log (xIndex + " " + yIndex + " " + position.x + " " + position.y);
       return position;
     }
 
@@ -85,9 +84,27 @@ namespace BubbleShooter {
     }
 
     private void StoreBubbleToMap (Bubble bubble, int xIndex, int yIndex) {
-      bubble.SetXIndex (xIndex);
-      bubble.SetYIndex (yIndex);
+      bubble.XIndex = xIndex;
+      bubble.YIndex = yIndex;
       bubbleMap [xIndex, yIndex] = bubble;
+    }
+
+    private IndexPair[] getAllNearbyIndex (int indexX, int indexY) {
+      IndexPair[] nearbyIndex = new IndexPair[6]; // left, right, leftup, leftbottom, rightup, rightbottom
+      nearbyIndex [0] = new IndexPair (indexX, indexY - 1); // left
+      nearbyIndex [1] = new IndexPair (indexX, indexY + 1); // right
+      if (indexX % 2 == 0) {
+        nearbyIndex [2] = new IndexPair (indexX - 1, indexY); // leftup
+        nearbyIndex [3] = new IndexPair (indexX + 1, indexY); // leftbottom
+        nearbyIndex [4] = new IndexPair (indexX - 1, indexY + 1); // rightup
+        nearbyIndex [5] = new IndexPair (indexX + 1, indexY + 1); // rightbottom
+      } else {
+        nearbyIndex [2] = new IndexPair (indexX - 1, indexY - 1); // leftup
+        nearbyIndex [3] = new IndexPair (indexX + 1, indexY - 1); // leftbottom
+        nearbyIndex [4] = new IndexPair (indexX - 1, indexY); // rightup
+        nearbyIndex [5] = new IndexPair (indexX + 1, indexY); // rightbottom
+      }
+      return nearbyIndex;
     }
 
     // Snap the bubble to the game board.
@@ -106,22 +123,9 @@ namespace BubbleShooter {
         }
       } else {
         // Collision object is an existing bubble.
-        int collidedX = collidedBubble.GetXIndex ();
-        int collidedY = collidedBubble.GetYIndex ();
-        IndexPair[] nearbyIndex = new IndexPair[6]; // left, right, leftup, leftbottom, rightup, rightbottom
-        nearbyIndex [0] = new IndexPair (collidedX, collidedY - 1); // left
-        nearbyIndex [1] = new IndexPair (collidedX, collidedY + 1); // right
-        if (collidedX % 2 == 0) {
-          nearbyIndex [2] = new IndexPair (collidedX - 1, collidedY); // leftup
-          nearbyIndex [3] = new IndexPair (collidedX + 1, collidedY); // leftbottom
-          nearbyIndex [4] = new IndexPair (collidedX - 1, collidedY + 1); // rightup
-          nearbyIndex [5] = new IndexPair (collidedX + 1, collidedY + 1); // rightbottom
-        } else {
-          nearbyIndex [2] = new IndexPair (collidedX - 1, collidedY - 1); // leftup
-          nearbyIndex [3] = new IndexPair (collidedX + 1, collidedY - 1); // leftbottom
-          nearbyIndex [4] = new IndexPair (collidedX - 1, collidedY); // rightup
-          nearbyIndex [5] = new IndexPair (collidedX + 1, collidedY); // rightbottom
-        }
+        int collidedX = collidedBubble.XIndex;
+        int collidedY = collidedBubble.YIndex;
+        IndexPair[] nearbyIndex = getAllNearbyIndex (collidedX, collidedY);
         float minDistance = 2 * bubbleRadius;
         snappedXIndex = collidedX;
         snappedYIndex = collidedY;
@@ -143,7 +147,6 @@ namespace BubbleShooter {
       }
       newBubble.transform.position = new Vector2 (bubbleMapPosition [snappedXIndex, snappedYIndex].x, bubbleMapPosition [snappedXIndex, snappedYIndex].y);
       StoreBubbleToMap (newBubble, snappedXIndex, snappedYIndex);
-      Debug.Log (snappedXIndex + " " + snappedYIndex + " " + bubbleMapPosition [snappedXIndex, snappedYIndex].x + " " + bubbleMapPosition [snappedXIndex, snappedYIndex].y);
     }
 
     // Destroy the bubbles.

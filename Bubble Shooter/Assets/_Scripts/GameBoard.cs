@@ -84,8 +84,7 @@ namespace BubbleShooter {
     }
 
     private void StoreBubbleToMap (Bubble bubble, int xIndex, int yIndex) {
-      bubble.XIndex = xIndex;
-      bubble.YIndex = yIndex;
+      bubble.Index = new IndexPair (xIndex, yIndex);
       bubbleMap [xIndex, yIndex] = bubble;
     }
 
@@ -123,8 +122,8 @@ namespace BubbleShooter {
         }
       } else {
         // Collision object is an existing bubble.
-        int collidedX = collidedBubble.XIndex;
-        int collidedY = collidedBubble.YIndex;
+        int collidedX = collidedBubble.Index.X;
+        int collidedY = collidedBubble.Index.Y;
         IndexPair[] nearbyIndex = getAllNearbyIndex (collidedX, collidedY);
         float minDistance = 2 * bubbleRadius;
         snappedXIndex = collidedX;
@@ -149,19 +148,93 @@ namespace BubbleShooter {
       StoreBubbleToMap (newBubble, snappedXIndex, snappedYIndex);
     }
 
+    // Get a list of indeies of bubbles that connect with new bubble and have the same color.
+    private ArrayList GetAdjacentSameColorBubbles (IndexPair newBubbleIndex, BubbleColor color) {
+      ArrayList bubbleIndexList = new ArrayList ();
+      bubbleIndexList.Add (newBubbleIndex);
+      Stack bubbleIndexStack = new Stack ();
+      bubbleIndexStack.Push (newBubbleIndex); 
+      while (bubbleIndexStack.Count != 0) {
+        IndexPair current = (IndexPair)bubbleIndexStack.Pop ();
+        IndexPair[] nearbyIndex = getAllNearbyIndex (current.X, current.Y);
+        for (int i = 0; i <= 5; i++) {
+          if (!IndexCheck (nearbyIndex [i].X, nearbyIndex [i].Y))
+            continue;
+          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y].Color != color)
+            continue;
+          if (bubbleIndexList.Contains (nearbyIndex [i]))
+            continue;
+          bubbleIndexStack.Push (nearbyIndex [i]);
+          bubbleIndexList.Add (nearbyIndex [i]);
+        }
+      }
+      return bubbleIndexList;
+    }
+
     // Destroy the bubbles.
-    public void DestroyBubbles (IEnumerable bubbles) {
-      foreach (Bubble bubble in bubbles) {
-        bubble.Destroy ();
+    public void DestroyBubbles (ArrayList bubbleIndexList) {
+      foreach (IndexPair index in bubbleIndexList) {
+        bubbleMap [index.X, index.Y].Destroy ();
       }
     }
 
-    public void MakeBubblesFall (IEnumerable bubbles) {
-      foreach (Bubble bubble in bubbles) {
+    // Get a list of indeies of bubbles that connect with new bubble and have the same color.
+    private ArrayList GetFallBubbles (ArrayList bubbleIndexList) {
+      bool[,] keptBubbleMap = new bool[this.numRows + 1, this.numBubblesEachRow + 1];
+      Stack bubbleStack = new Stack ();
+      for (int i = 1; i <= numBubblesEachRow; i++) {
+        if (bubbleMap [1, i] != null && !bubbleIndexList.Contains (new IndexPair (1, i))) {
+          keptBubbleMap [1, i] = true;
+          bubbleStack.Push (bubbleMap [1, i]);
+        }
+      }
+
+      while (bubbleStack.Count != 0) {
+        Bubble current = (Bubble)bubbleStack.Pop ();
+        IndexPair[] nearbyIndex = getAllNearbyIndex (current.Index.X, current.Index.Y);
+        for (int i = 0; i <= 5; i++) {
+          if (!IndexCheck (nearbyIndex [i].X, nearbyIndex [i].Y))
+            continue;
+          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] != null 
+            && !bubbleIndexList.Contains (nearbyIndex [i])
+            && keptBubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] == false) {
+            keptBubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] = true;
+            bubbleStack.Push (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y]);
+          }
+        }
+      }
+
+      ArrayList fallBubbleList = new ArrayList ();
+      for (int i = 1; i <= numBubblesEachRow; i++) {
+        for (int j = 1; j <= numRows; j++) {
+          if (bubbleMap [i, j] != null && keptBubbleMap [i, j] == false) {
+            fallBubbleList.Add (bubbleMap [i, j]);
+          }
+        }
+      }
+      return fallBubbleList;
+    }
+    
+    // The animation to fall bubbles.
+    public void MakeBubblesFall (ArrayList fallBubbleList) {
+      foreach (Bubble bubble in fallBubbleList) {
         bubble.Fall ();
       }
     }
 
+    public void postAligningNewBubble (Bubble alignedBubble) {
+      ArrayList bubbleIndexList = GetAdjacentSameColorBubbles (alignedBubble.Index, alignedBubble.Color);
+      // Do nothing if the number of same color connecting bubbles is less than three.
+      if (bubbleIndexList.Count < 3)
+        return;
+
+      // Get the list of all bubbles that should fall.
+      ArrayList fallBubbleList = GetFallBubbles (bubbleIndexList);
+      MakeBubblesFall (fallBubbleList);
+
+      // Remove direct nodes from bubbleMap.
+      DestroyBubbles (bubbleIndexList);
+    }
   }
 }
 

@@ -9,34 +9,23 @@ namespace BubbleShooter {
   }
 
   public class Bubble : MonoBehaviour {
-    private int xIndex;
-    private int yIndex;
+    private IndexPair index;
     private GameBoard gameBoard;
     private BubbleLauncher bubbleLauncher;
     private BubbleColor color;
     private BubbleState state = BubbleState.Loaded;
 
     public Bubble (int xIndex, int yIndex, BubbleColor color) {
-      this.xIndex = xIndex;
-      this.yIndex = yIndex;
+      this.index = new IndexPair (xIndex, yIndex);
       this.color = color;
     }
 
-    public int XIndex {
+    public IndexPair Index {
       get {
-        return xIndex;
+        return index;
       }
       set {
-        xIndex = value;
-      }
-    }
-
-    public int YIndex {
-      get {
-        return yIndex;
-      }
-      set {
-        yIndex = value;
+        index = value;
       }
     }
 

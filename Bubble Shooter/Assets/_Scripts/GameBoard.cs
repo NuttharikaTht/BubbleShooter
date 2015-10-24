@@ -223,7 +223,7 @@ namespace BubbleShooter {
       }
     }
 
-    public void PostAligningNewBubble (Bubble alignedBubble) {
+    public void EraseAndFall (Bubble alignedBubble) {
       ArrayList bubbleIndexList = GetAdjacentSameColorBubbles (alignedBubble.Index, alignedBubble.Color);
       // Do nothing if the number of same color connecting bubbles is less than three.
       if (bubbleIndexList.Count < 3)

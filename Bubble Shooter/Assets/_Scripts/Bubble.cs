@@ -97,6 +97,8 @@ namespace BubbleShooter {
     }
 
     public void Fall () {
+      Debug.Log ("Bubble is falling!");
+      Destroy (this);
     }
 
     // Bounce the bubble.
@@ -112,6 +114,8 @@ namespace BubbleShooter {
       rb.isKinematic = true;
       // Snap this bubble to game board.
       this.GameBoard.SnapBubble (this, collidedBubble);
+      // Erase and fall bubbles if possible.
+      this.GameBoard.EraseAndFall (this);
       // Set stopping flag.
       this.State = BubbleState.Stopped;
       // Load a new bubble.

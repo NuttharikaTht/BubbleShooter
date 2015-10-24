@@ -173,8 +173,9 @@ namespace BubbleShooter {
 
     // Destroy the bubbles.
     public void DestroyBubbles (ArrayList bubbleIndexList) {
+      // TODO(gcpopo): remove bubbles from bubble map in this method.
       foreach (IndexPair index in bubbleIndexList) {
-        bubbleMap [index.X, index.Y].Destroy ();
+        bubbleMap [index.X, index.Y].Blast ();
       }
     }
 
@@ -222,7 +223,7 @@ namespace BubbleShooter {
       }
     }
 
-    public void postAligningNewBubble (Bubble alignedBubble) {
+    public void PostAligningNewBubble (Bubble alignedBubble) {
       ArrayList bubbleIndexList = GetAdjacentSameColorBubbles (alignedBubble.Index, alignedBubble.Color);
       // Do nothing if the number of same color connecting bubbles is less than three.
       if (bubbleIndexList.Count < 3)

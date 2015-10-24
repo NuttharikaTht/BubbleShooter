@@ -87,7 +87,13 @@ namespace BubbleShooter {
       }
     }
 
-    public void Destroy () {
+    public void Blast () {
+      // Play animation.
+      Animation animation = this.GetComponent<Animation> ();
+      animation.Play ("Bubble Blast");
+
+      // Destroy bubble game object.
+      Destroy (this);
     }
 
     public void Fall () {
@@ -108,10 +114,6 @@ namespace BubbleShooter {
       this.GameBoard.SnapBubble (this, collidedBubble);
       // Set stopping flag.
       this.State = BubbleState.Stopped;
-
-      Animation animation = this.GetComponent<Animation> ();
-      animation.Play ("Bubble Blast");
-
       // Load a new bubble.
       this.BubbleLauncher.LoadBubble ();
     }

@@ -231,10 +231,11 @@ namespace BubbleShooter {
 
       // Get the list of all bubbles that should fall.
       ArrayList fallBubbleList = GetFallBubbles (bubbleIndexList);
-      MakeBubblesFall (fallBubbleList);
 
       // Remove direct nodes from bubbleMap.
       DestroyBubbles (bubbleIndexList);
+      // Make these bubbles to fall.
+      MakeBubblesFall (fallBubbleList);
     }
   }
 }

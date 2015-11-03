@@ -27,6 +27,19 @@ namespace BubbleShooter {
         y = value;
       }
     }
+
+    public override bool Equals (System.Object other) {
+      IndexPair otherPair = other as IndexPair;
+
+      if (otherPair == null)
+        return false;
+
+      return this.X == otherPair.X && this.Y == otherPair.Y;
+    }
+
+    public override int GetHashCode () {
+      return this.X << 15 + this.Y;
+    }
   }
 }
 

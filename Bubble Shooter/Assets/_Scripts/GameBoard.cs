@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace BubbleShooter {
   public class GameBoard : MonoBehaviour {
@@ -160,10 +161,11 @@ namespace BubbleShooter {
         for (int i = 0; i <= 5; i++) {
           if (!IndexCheck (nearbyIndex [i].X, nearbyIndex [i].Y))
             continue;
-          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y].Color != color)
+
+          Bubble bubble = bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y];
+          if (bubble == null || bubble.Color != color || bubbleIndexList.Contains (nearbyIndex [i]))
             continue;
-          if (bubbleIndexList.Contains (nearbyIndex [i]))
-            continue;
+
           bubbleIndexStack.Push (nearbyIndex [i]);
           bubbleIndexList.Add (nearbyIndex [i]);
         }
@@ -173,9 +175,9 @@ namespace BubbleShooter {
 
     // Destroy the bubbles.
     public void DestroyBubbles (ArrayList bubbleIndexList) {
-      // TODO(gcpopo): remove bubbles from bubble map in this method.
       foreach (IndexPair index in bubbleIndexList) {
         bubbleMap [index.X, index.Y].Blast ();
+        bubbleMap [index.X, index.Y] = null;
       }
     }
 

@@ -23,13 +23,14 @@ namespace BubbleShooter {
     public void LoadBubble () {
       loadedBubble = Instantiate (bubblePrefab, transform.position, Quaternion.identity) as GameObject;
 
-      SpriteRenderer renderer = loadedBubble.GetComponent<SpriteRenderer> ();
-      renderer.color = pallette.GetRandomColor ();
-
       Bubble bubble = loadedBubble.GetComponent<Bubble> ();
+      bubble.Color = pallette.GetRandomBubbleColor ();
       bubble.State = BubbleState.Loaded;
       bubble.GameBoard = gameBoard;
       bubble.BubbleLauncher = this;
+
+      SpriteRenderer renderer = loadedBubble.GetComponent<SpriteRenderer> ();
+      renderer.color = pallette.GetColor (bubble.Color);
     }
 
     // Launch the bubble.

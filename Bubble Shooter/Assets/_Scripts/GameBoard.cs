@@ -176,7 +176,7 @@ namespace BubbleShooter {
     // Destroy the bubbles.
     public void DestroyBubbles (ArrayList bubbleIndexList) {
       foreach (IndexPair index in bubbleIndexList) {
-        bubbleMap [index.X, index.Y].Blast ();
+        StartCoroutine (bubbleMap [index.X, index.Y].Blast ());
         bubbleMap [index.X, index.Y] = null;
       }
     }
@@ -185,8 +185,16 @@ namespace BubbleShooter {
     private ArrayList GetFallBubbles (ArrayList bubbleIndexList) {
       bool[,] keptBubbleMap = new bool[this.numRows + 1, this.numBubblesEachRow + 1];
       Stack bubbleStack = new Stack ();
+
+      // Keep all bubbles in destroyed bubble list.
+      foreach (IndexPair index in bubbleIndexList) {
+        keptBubbleMap [index.X, index.Y] = true;
+      }
+
+      // Keep all top bubbles.
       for (int i = 1; i <= numBubblesEachRow; i++) {
-        if (bubbleMap [1, i] != null && !bubbleIndexList.Contains (new IndexPair (1, i))) {
+        if (bubbleMap [1, i] != null && !keptBubbleMap [1, i]) {
+          // Note that do not expand any bubbles in destroyed bubble list.
           keptBubbleMap [1, i] = true;
           bubbleStack.Push (bubbleMap [1, i]);
         }
@@ -198,9 +206,8 @@ namespace BubbleShooter {
         for (int i = 0; i <= 5; i++) {
           if (!IndexCheck (nearbyIndex [i].X, nearbyIndex [i].Y))
             continue;
-          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] != null 
-            && !bubbleIndexList.Contains (nearbyIndex [i])
-            && keptBubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] == false) {
+          if (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] != null
+            && !keptBubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y]) {
             keptBubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y] = true;
             bubbleStack.Push (bubbleMap [nearbyIndex [i].X, nearbyIndex [i].Y]);
           }
@@ -208,9 +215,9 @@ namespace BubbleShooter {
       }
 
       ArrayList fallBubbleList = new ArrayList ();
-      for (int i = 1; i <= numBubblesEachRow; i++) {
-        for (int j = 1; j <= numRows; j++) {
-          if (bubbleMap [i, j] != null && keptBubbleMap [i, j] == false) {
+      for (int i = 1; i <= numRows; i++) {
+        for (int j = 1; j <= numBubblesEachRow; j++) {
+          if (bubbleMap [i, j] != null && !keptBubbleMap [i, j]) {
             fallBubbleList.Add (bubbleMap [i, j]);
           }
         }
@@ -221,7 +228,9 @@ namespace BubbleShooter {
     // The animation to fall bubbles.
     public void MakeBubblesFall (ArrayList fallBubbleList) {
       foreach (Bubble bubble in fallBubbleList) {
-        bubble.Fall ();
+        IndexPair index = bubble.Index;
+        StartCoroutine (bubble.Fall ());
+        bubbleMap [index.X, index.Y] = null;
       }
     }
 

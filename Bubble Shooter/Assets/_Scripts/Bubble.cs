@@ -87,18 +87,26 @@ namespace BubbleShooter {
       }
     }
 
-    public void Blast () {
+    public IEnumerator Blast () {
       // Play animation.
       Animation animation = this.GetComponent<Animation> ();
       animation.Play ("Bubble Blast");
 
+      yield return new WaitForSeconds (animation.clip.length);
+
       // Destroy bubble game object.
-      Destroy (this);
+      Destroy (this.gameObject);
     }
 
-    public void Fall () {
-      Debug.Log ("Bubble is falling!");
-      Destroy (this);
+    public IEnumerator Fall () {
+      // Temporarily borrow "blast" animation.
+      Animation animation = this.GetComponent<Animation> ();
+      animation.Play ("Bubble Blast");
+
+      yield return new WaitForSeconds (animation.clip.length);
+
+      // Destroy bubble game object.
+      Destroy (this.gameObject);
     }
 
     // Bounce the bubble.
